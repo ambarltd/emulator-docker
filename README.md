@@ -10,7 +10,7 @@ Messages are sent in parallel (according to a partitioning column), with orderin
 and with delivery guarantees (at least once).
 
 - The Docker image is available [on DockerHub](https://hub.docker.com/r/ambarltd/emulator)
-- The source code is available [on GitHub](https://github.com/ambarltd/emulator-docker)
+- The source code is available [on GitHub](https://github.com/ambarltd/emulator)
 
 ---
 
