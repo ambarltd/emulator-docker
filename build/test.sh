@@ -11,5 +11,5 @@ docker run -t emu8190 --help | grep "Connect your databases to multiple consumer
 echo "============================================"
 echo "Docker Build and Sanity Check Passed"
 echo "============================================"
-printf "\n\n\n\n\n"
+printf "\n"
 echo "Sanity check passed. Congratulations. Bye!"
