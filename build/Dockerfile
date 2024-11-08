@@ -1,0 +1,56 @@
+FROM alpine:3.19 AS haskell-base
+
+RUN apk update
+RUN apk add libffi-dev
+RUN apk add ncurses-dev
+RUN apk add libpq-dev
+RUN apk add gmp-dev
+RUN apk add zlib-dev
+RUN apk add libc-dev
+RUN apk add musl-dev
+
+##################################################################################
+##################################################################################
+##################################################################################
+
+FROM haskell-base AS haskell-build
+
+RUN apk add git
+RUN apk add curl
+RUN apk add binutils-gold
+RUN apk add gcc
+RUN apk add g++
+RUN apk add make
+RUN apk add perl
+RUN apk add pkgconfig
+RUN apk add tar
+RUN apk add xz
+
+RUN curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | \
+    BOOTSTRAP_HASKELL_NONINTERACTIVE=1 \
+    BOOTSTRAP_HASKELL_GHC_VERSION="9.10.1" \
+    BOOTSTRAP_HASKELL_INSTALL_NO_STACK=1 \
+    sh
+
+ENV PATH="/root/.ghcup/bin:$PATH"
+ENV PATH="/root/.cabal/bin:$PATH"
+
+WORKDIR /tmp
+RUN git clone https://github.com/ambarltd/emulator.git
+RUN mv /tmp/emulator /opt/emulator
+
+WORKDIR /opt/emulator
+RUN git fetch # just in case we have cached git clone
+RUN git checkout v1.1
+RUN cabal build emulator
+RUN cp $(cabal list-bin emulator) /tmp/emulator
+
+##################################################################################
+##################################################################################
+##################################################################################
+
+FROM haskell-base AS final
+
+COPY --from=haskell-build /tmp/emulator /opt/emulator/emulator
+
+ENTRYPOINT ["/opt/emulator/emulator"]
