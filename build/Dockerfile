@@ -52,5 +52,8 @@ RUN cp $(cabal list-bin emulator) /tmp/emulator
 FROM haskell-base AS final
 
 COPY --from=haskell-build /tmp/emulator /opt/emulator/emulator
+RUN mkdir -p /opt/emulator/config
 
 ENTRYPOINT ["/opt/emulator/emulator"]
+
+CMD ["run", "--config", "/opt/emulator/config/config.yaml"]
