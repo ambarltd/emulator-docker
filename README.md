@@ -61,6 +61,7 @@ services:
     restart: always
     volumes:
       - ./path/to/config.yaml:/opt/emulator/config/config.yaml
+      - ./path/to/volume/ambar-emulator:/root/.local/share/ambar-emulator # pick a path to persist the emulator's state
 
 networks:
     development-network:
@@ -113,7 +114,7 @@ data_destinations:
     username: username-123
     password: password-123
     sources:
-      - postgres source
+      - postgres_source
 ```
 
 ### Further Work:
