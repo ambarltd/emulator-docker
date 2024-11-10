@@ -18,7 +18,7 @@ and with delivery guarantees (at least once).
 
 ### Setup
 
-Create a configuration file, and mount it into the emulator's container at `/opt/emulator/config/config.yaml`.
+Create a configuration file and mount it to the emulator container.
 
 For example, if you are using `docker compose`:
 
