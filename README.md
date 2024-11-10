@@ -24,6 +24,15 @@ For example, if you are using `docker compose`:
 
 ```yaml
 services:
+  ambar-emulator:
+    image: ambarltd/emulator:latest
+    container_name: ambar-emulator
+    restart: always
+    volumes:
+      # copy the configuration file in your host to the emulator container 
+      - ./path/to/config.yaml:/opt/emulator/config/config.yaml
+      # pick a path in your host to persist the emulator container's state
+      - ./path/to/volume/ambar-emulator:/root/.local/share/ambar-emulator
   web-server:
     image: your-web-server-image
     container_name: web-server
@@ -55,13 +64,6 @@ services:
     networks:
       development-network:
         ipv4_address: 172.43.0.103
-  ambar-emulator:
-    image: ambarltd/emulator:latest
-    container_name: ambar-emulator
-    restart: always
-    volumes:
-      - ./path/to/config.yaml:/opt/emulator/config/config.yaml
-      - ./path/to/volume/ambar-emulator:/root/.local/share/ambar-emulator # pick a path to persist the emulator's state
 
 networks:
     development-network:
