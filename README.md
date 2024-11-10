@@ -29,9 +29,9 @@ services:
     container_name: ambar-emulator
     restart: always
     volumes:
-      # copy the configuration file in your host to the emulator container 
+      # copy the configuration file in your host to the emulator 
       - ./path/to/config.yaml:/opt/emulator/config/config.yaml
-      # pick a path in your host to persist the emulator container's state
+      # pick a directory in your host to persist the emulator state
       - ./path/to/volume/ambar-emulator:/root/.local/share/ambar-emulator
   web-server:
     image: your-web-server-image
