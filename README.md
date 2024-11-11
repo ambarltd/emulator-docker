@@ -125,7 +125,7 @@ data_destinations:
 ### Limitations
 
 1) The emulator works well in development and test environments, but does not have the strict delivery and durability guarantees that the real Ambar [gives you](https://ambar.cloud/blog/provably-correct-data-streaming-our-white-paper) in production environments.
-2) The emulator consumes places a higher foorprint on your databases and web servers compared to the real Ambar. Why? Because the emulator does not implement features such as change data capture and [adaptive load](https://ambar.cloud/blog/optimal-consumption-with-adaptive-load).
+2) The emulator consumes places a higher load on your databases and web servers compared to the real Ambar. Why? Because the emulator does not implement features such as change data capture and [adaptive load](https://ambar.cloud/blog/optimal-consumption-with-adaptive-load).
 3) The emulator can handle thousands of messages per second but does not scale horizontally, because the emulator can only run in a single machine.
 4) The emulator doesn't provide filtering (yet - we will eventually add this).
 
