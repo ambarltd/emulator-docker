@@ -2,7 +2,7 @@
 
 ![Main Branch - Build Status](https://github.com/ambarltd/emulator-docker/actions/workflows/test.yaml/badge.svg?branch=main)
 
-This is a Dockerized emulator of [Ambar](https://ambar.cloud) for testing and development environments. Please do not use it for production environments ([why](#limitations)).
+This is a Dockerized emulator of [Ambar](https://ambar.cloud) for testing and development environments. 
 
 Ambar replaces infrastructure such as Kafka, Debezium, Kafka Connect, RabbitMQ, and others. Ambar allows you to 
 read messages from one or more database tables, and forward each new row as a message to one or more HTTP endpoints. 
@@ -11,6 +11,8 @@ and with delivery guarantees (at least once).
 
 - The Docker image is available [on DockerHub](https://hub.docker.com/r/ambarltd/emulator)
 - The source code is available [on GitHub](https://github.com/ambarltd/emulator)
+
+Please use the emulator in testing and development environments, ([not production environments](#limitations)).
 
 ---
 
