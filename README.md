@@ -83,6 +83,7 @@ Example `configuration.yaml`:
 # Connections to your databases.
 # The Emulator will read data from those databases.
 data_sources:
+
   - id: postgres_source
     description: Events Table in Postgres
     type: postgres
@@ -121,7 +122,7 @@ data_destinations:
       - postgres_source
 ```
 
-### [Limitations](#limitations)
+### Limitations
 
 1) The emulator works well in development and test environments, but does not have the [strict](https://ambar.cloud/blog/provably-correct-data-streaming-our-white-paper) delivery and durability guarantees required of production environments.
 2) The emulator consumes more resources on databases and web servers, because it does not implement features such as change data capture and [adaptive load](https://ambar.cloud/blog/optimal-consumption-with-adaptive-load).
