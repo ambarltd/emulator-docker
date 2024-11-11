@@ -2,7 +2,7 @@
 
 ![Main Branch - Build Status](https://github.com/ambarltd/emulator-docker/actions/workflows/test.yaml/badge.svg?branch=main)
 
-This is a Dockerized emulator of [Ambar](https://ambar.cloud) for testing and development purposes.
+This is a Dockerized emulator of [Ambar](https://ambar.cloud) for testing and development environments. Please do not use it for production environments ([why](#limitations)).
 
 Ambar replaces infrastructure such as Kafka, Debezium, Kafka Connect, RabbitMQ, and others. Ambar allows you to 
 read messages from one or more database tables, and forward each new row as a message to one or more HTTP endpoints. 
@@ -119,11 +119,18 @@ data_destinations:
       - postgres_source
 ```
 
-### Further Work:
+### [Limitations](#limitations)
+
+1) The emulator works well in development and test environments, but does not have the [strict](https://ambar.cloud/blog/provably-correct-data-streaming-our-white-paper) delivery and durability guarantees required of production environments.
+2) The emulator consumes more resources on databases and web servers, because it does not implement features such as change data capture and [adaptive load](https://ambar.cloud/blog/optimal-consumption-with-adaptive-load).
+3) The emulator can handle thousands of messages per second but does not scale horizontally, because the emulator can only run in a single machine.
+4) The emulator doesn't provide filtering (yet - we will eventually add this).
+
+### Upcoming Features:
 
 - [ ] Add support for MySQL
 - [ ] Add support for MariaDB
 - [ ] Add support for SQL Server
+- [ ] Add support for filtering
 - [ ] Add support for Oracle
 - [ ] Add support for MongoDB
-- [ ] Add support for filtering capabilities
