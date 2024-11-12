@@ -41,7 +41,7 @@ RUN mv /tmp/emulator /opt/emulator
 
 WORKDIR /opt/emulator
 RUN git fetch # just in case we have cached git clone
-RUN git checkout v1.1
+RUN git checkout v1.2
 RUN cabal build emulator
 RUN cp $(cabal list-bin emulator) /tmp/emulator
 
