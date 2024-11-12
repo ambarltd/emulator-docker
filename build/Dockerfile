@@ -54,6 +54,6 @@ FROM haskell-base AS final
 COPY --from=haskell-build /tmp/emulator /opt/emulator/emulator
 RUN mkdir -p /opt/emulator/config
 
-ENTRYPOINT ["/opt/emulator/emulator"]
+ENTRYPOINT ["sh", "-c", "rm -Rf /root/.local/share/ambar-emulator/queues/*.lock /root/.local/share/ambar-emulator/queues/**/*.lock && /opt/emulator/emulator $0 $@"]
 
 CMD ["run", "--config", "/opt/emulator/config/config.yaml"]
