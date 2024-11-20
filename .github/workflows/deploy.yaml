@@ -21,8 +21,10 @@ jobs:
         include:
           - platform: linux/amd64
             runner_group: large_amd64
+            platform_tag: amd64
           - platform: linux/arm64
             runner_group: large_arm64
+            platform_tag: arm64
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
@@ -45,19 +47,20 @@ jobs:
         with:
           context: ./build/
           file: ./build/Dockerfile
-          push: false
+          pull: false
+          push: true
           platforms: ${{ matrix.platform }}
-          tags: ambarltd/emulator:${{ github.event.release.tag_name }},ambarltd/emulator:latest
+          tags: ambarltd/emulator:${{ github.event.release.tag_name }}-${{ matrix.platform_tag }}
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Push Docker image for ${{ matrix.platform }}
         run: |
           docker manifest create ambarltd/emulator:${{ github.event.release.tag_name }} \
-            --amend ambarltd/emulator:${{ github.event.release.tag_name }}
-      
+            --amend ambarltd/emulator:${{ github.event.release.tag_name }}-${{ matrix.platform_tag }} || \
+            docker manifest create ambarltd/emulator:${{ github.event.release.tag_name }}
           docker manifest push ambarltd/emulator:${{ github.event.release.tag_name }}
           
-          docker manifest create ambarltd/emulator:${{ github.event.release.tag_name }} \
-            --amend ambarltd/emulator:latest
-          
+          docker manifest create ambarltd/emulator:latest \
+            --amend ambarltd/emulator:${{ github.event.release.tag_name }}-${{ matrix.platform_tag }} || \
+            docker manifest create ambarltd/emulator:latest
           docker manifest push ambarltd/emulator:latest
