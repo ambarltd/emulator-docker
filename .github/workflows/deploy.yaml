@@ -47,9 +47,7 @@ jobs:
           file: ./build/Dockerfile
           push: true
           platforms: ${{ matrix.platform }}
-          tags:
-            - ambarltd/emulator:${{ github.event.release.tag_name }}
-            - ambarltd/emulator:latest
+          tags: ambarltd/emulator:${{ github.event.release.tag_name }},ambarltd/emulator:latest
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Push Docker image for ${{ matrix.platform }}
