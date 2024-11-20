@@ -54,7 +54,7 @@ jobs:
         run: |
           # Create and annotate the manifest
           docker manifest create ambarltd/emulator:${{ github.event.release.tag_name }} \
-            --amend ambarltd/emulator:${{ github.event.release.tag_name }}-${{ matrix.platform }}
+            --amend ambarltd/emulator:${{ github.event.release.tag_name }}
           
           # Push the manifest
           docker manifest push ambarltd/emulator:${{ github.event.release.tag_name }}
