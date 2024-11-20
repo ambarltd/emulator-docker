@@ -56,7 +56,7 @@ jobs:
   merge_manifests:
     name: Merge manifests to prevent overrides on Docker Hub
     runs-on: ubuntu-20.04
-    depends-on: push_to_registry
+    needs: [push_to_registry]
     permissions:
       packages: write
       contents: read
