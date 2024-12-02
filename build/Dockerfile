@@ -8,6 +8,8 @@ RUN apk add gmp-dev
 RUN apk add zlib-dev
 RUN apk add libc-dev
 RUN apk add musl-dev
+RUN apk add mariadb-connector-c-dev
+RUN apk add pcre-dev
 
 ##################################################################################
 ##################################################################################
@@ -41,7 +43,7 @@ RUN mv /tmp/emulator /opt/emulator
 
 WORKDIR /opt/emulator
 RUN git fetch # just in case we have cached git clone
-RUN git checkout v1.5
+RUN git checkout v1.6
 RUN cabal build emulator
 RUN cp $(cabal list-bin emulator) /tmp/emulator
 
