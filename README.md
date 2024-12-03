@@ -131,9 +131,8 @@ data_destinations:
 
 ### Upcoming Features:
 
-- [ ] Add support for MySQL
-- [ ] Add support for MariaDB
 - [ ] Add support for SQL Server
 - [ ] Add support for filtering
 - [ ] Add support for Oracle
 - [ ] Add support for MongoDB
+- [ ] Add support for DynamoDB
