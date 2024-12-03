@@ -181,7 +181,7 @@ Data destination endpoints will then receive payloads, in parallel (per partitio
     "aggregate_id": "420ac19b-1cd3-4c9c-b8d4-56bdd936ca38",
     "aggregate_version": 1,
     "json_payload": "{\"name\": \"John Doe\",\"email\": \"john.doe@example.com\"}",
-    "json_metadata": "{\"ip_address\": \"192.168.1.1\",\"user_agent\": \"Mozilla/5.0\"}",
+    "json_metadata": "{\"ip_address\": \"192.168.1.1\", \"user_agent\": \"Mozilla/5.0\"}",
     "recorded_on": "2024-12-03T12:00:00Z",
     "causation_id": "e7b3a07c-4a90-4fc3-8243-7c90a33a6f4e",
     "correlation_id": "e7b3a07c-4a90-4fc3-8243-7c90a33a6f4e"
