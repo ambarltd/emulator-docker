@@ -197,6 +197,7 @@ Data destination endpoints will then receive payloads, in parallel (per partitio
 
 The Emulator will move on to the next message if the endpoint replies with an acknowledgement payload, `{"result":{"success":{}}}`.
 
+---
 
 ## Limitations
 
@@ -204,6 +205,8 @@ The Emulator will move on to the next message if the endpoint replies with an ac
 2) The emulator consumes more resources on your databases and web servers compared to the real Ambar. Why? Because the emulator does not implement features such as change data capture and [adaptive load](https://ambar.cloud/blog/optimal-consumption-with-adaptive-load).
 3) The emulator can handle thousands of messages per second but does not scale horizontally, because the emulator can only run in a single machine.
 4) The emulator doesn't provide filtering (yet - we will eventually add this).
+
+---
 
 ## Upcoming Features:
 
