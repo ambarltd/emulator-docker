@@ -26,6 +26,7 @@ For example, if you are using `docker compose`:
 
 ```yaml
 services:
+
   ambar-emulator:
     image: ambarltd/emulator:latest
     container_name: ambar-emulator
@@ -35,15 +36,7 @@ services:
       - ./path/to/config.yaml:/opt/emulator/config/config.yaml
       # pick a directory in your host to persist the emulator state
       - ./path/to/volume/ambar-emulator:/root/.local/share/ambar-emulator
-  backend-server:
-    image: your-backend-server-image
-    container_name: backend-server
-    restart: always
-    expose:
-      - 8080
-    networks:
-      development-network:
-        ipv4_address: 172.43.0.102
+
   postgres-events:
     image: postgres:16.4
     container_name: postgres-events
@@ -59,6 +52,7 @@ services:
     networks:
       development-network:
         ipv4_address: 172.43.0.103
+
   mysql-events:
       image: mysql:8.0.40
       container_name: mysql-events
@@ -73,6 +67,17 @@ services:
     networks:
       development-network:
         ipv4_address: 172.43.0.104
+
+  backend-server:
+    image: your-backend-server-image
+    container_name: backend-server
+    restart: always
+    expose:
+      - 8080
+    networks:
+      development-network:
+        ipv4_address: 172.43.0.199
+
 networks:
     development-network:
         driver: bridge
@@ -112,10 +117,11 @@ data_sources:
       - correlation_id
     serialColumn: serial_column
     partitioningColumn: correlation_id
+
   - id: mysql_source
     description: Events Table in MySQL
     type: mysql
-    host: 172.43.0.103
+    host: 172.43.0.104
     port: 3306
     username: root
     password: my_password
@@ -139,33 +145,67 @@ data_sources:
 # The Emulator will send data it reads from the databases to these endpoints.
 data_destinations:
 
-  - id: http_destination
+  - id: projection_1
     description: Projection 1
     type: http-push
-    endpoint: http://172.30.0.102:8080/projections/projection-1
+    endpoint: http://172.30.0.199:8080/projections/projection-1
     username: http-username-123
     password: http-password-123
     sources:
       - postgres_source
 
-  - id: http_destination
+  - id: projection_2
     description: Projection 2
     type: http-push
-    endpoint: http://172.30.0.102:8080/projections/projection-2
+    endpoint: http://172.30.0.199:8080/projections/projection-2
     username: http-username-123
     password: http-password-123
     sources:
       - mysql-source
 ```
 
-### Limitations
+### Payloads
+
+Data destination endpoints will then receive payloads, in parallel (per partitioning column), in order (per partitioning column), and at least once. For example:
+
+```
+{
+  "data_source_id": "postgres_source",
+  "data_source_description": "Events Table in Postgres",
+  "data_destination_id": "projection_1",
+  "data_destination_description": "Projection 1",
+  "payload": {
+    "serial_column": 12345,
+    "event_id": "e7b3a07c-4a90-4fc3-8243-7c90a33a6f4e",
+    "event_name": "UserSignedUp",
+    "aggregate_id": "420ac19b-1cd3-4c9c-b8d4-56bdd936ca38",
+    "aggregate_version": 1,
+    "json_payload": {
+      "name": "John Doe",
+      "email": "john.doe@example.com"
+    },
+    "json_metadata": {
+      "ip_address": "192.168.1.1",
+      "user_agent": "Mozilla/5.0"
+    },
+    "recorded_on": "2024-12-03T12:00:00Z",
+    "causation_id": "e7b3a07c-4a90-4fc3-8243-7c90a33a6f4e",
+    "correlation_id": "e7b3a07c-4a90-4fc3-8243-7c90a33a6f4e"
+  }
+}
+```
+
+The Emulator will move on to the next message if the endpoint replies with an acknowledgement payload, `{"result":{"success":{}}}`.
+
+
+## Limitations
 
 1) The emulator works well in development and test environments, but does not have the strict delivery and durability guarantees that the real Ambar [gives you](https://ambar.cloud/blog/provably-correct-data-streaming-our-white-paper) in production environments.
 2) The emulator consumes more resources on your databases and web servers compared to the real Ambar. Why? Because the emulator does not implement features such as change data capture and [adaptive load](https://ambar.cloud/blog/optimal-consumption-with-adaptive-load).
 3) The emulator can handle thousands of messages per second but does not scale horizontally, because the emulator can only run in a single machine.
 4) The emulator doesn't provide filtering (yet - we will eventually add this).
 
-### Upcoming Features:
+## Upcoming Features:
 
 - [ ] Add support for SQL Server
 - [ ] Add support for filtering
