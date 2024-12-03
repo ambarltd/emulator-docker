@@ -35,17 +35,10 @@ services:
       - ./path/to/config.yaml:/opt/emulator/config/config.yaml
       # pick a directory in your host to persist the emulator state
       - ./path/to/volume/ambar-emulator:/root/.local/share/ambar-emulator
-  web-server:
-    image: your-web-server-image
-    container_name: web-server
+  backend-server:
+    image: your-backend-server-image
+    container_name: backend-server
     restart: always
-    environment:
-      EVENT_STORE_HOST: "172.30.0.102"
-      EVENT_STORE_PORT: 5432
-      EVENT_STORE_DATABASE_NAME: "my_database"
-      EVENT_STORE_USER: "my_username"
-      EVENT_STORE_PASSWORD: "my_password"
-      EVENT_STORE_CREATE_TABLE_WITH_NAME: "event_table" # something needs to create the table, we're assuming the webserver is doing that
     expose:
       - 8080
     networks:
@@ -66,7 +59,20 @@ services:
     networks:
       development-network:
         ipv4_address: 172.43.0.103
-
+  mysql-events:
+      image: mysql:8.0.40
+      container_name: mysql-events
+      restart: always
+      volumes:
+          - ./data/mysql-event-store:/var/lib/mysql
+      environment:
+          MYSQL_DATABASE: my_database
+          MYSQL_ROOT_PASSWORD: my_password
+      expose:
+          - 3306
+    networks:
+      development-network:
+        ipv4_address: 172.43.0.104
 networks:
     development-network:
         driver: bridge
@@ -81,7 +87,7 @@ Example `configuration.yaml`:
 
 ```yaml
 # Connections to your databases.
-# The Emulator will read data from those databases.
+# The Emulator will read data from these databases.
 data_sources:
 
   - id: postgres_source
@@ -106,20 +112,50 @@ data_sources:
       - correlation_id
     serialColumn: serial_column
     partitioningColumn: correlation_id
+  - id: mysql_source
+    description: Events Table in MySQL
+    type: mysql
+    host: 172.43.0.103
+    port: 3306
+    username: root
+    password: my_password
+    database: my_database
+    table: events_table
+    columns:
+      - id
+      - event_id
+      - event_name
+      - aggregate_id
+      - aggregate_version
+      - json_payload
+      - json_metadata
+      - recorded_on
+      - causation_id
+      - correlation_id
+    autoIncrementingColumn: id
+    partitioningColumn: correlation_id
 
-# Connections to your endpoint.
+# Connections to your endpoints.
 # The Emulator will send data it reads from the databases to these endpoints.
 data_destinations:
 
-  # Send data via HTTP
   - id: http_destination
     description: Projection 1
     type: http-push
     endpoint: http://172.30.0.102:8080/projections/projection-1
-    username: username-123
-    password: password-123
+    username: http-username-123
+    password: http-password-123
     sources:
       - postgres_source
+
+  - id: http_destination
+    description: Projection 2
+    type: http-push
+    endpoint: http://172.30.0.102:8080/projections/projection-2
+    username: http-username-123
+    password: http-password-123
+    sources:
+      - mysql-source
 ```
 
 ### Limitations
