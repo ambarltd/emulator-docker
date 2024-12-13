@@ -68,6 +68,22 @@ services:
       development-network:
         ipv4_address: 172.43.0.104
 
+  sqlserver-events:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver-events
+    restart: always
+    volumes:
+      - ./data/sqlserver-event-store:/var/opt/mssql
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: my_password
+      MSSQL_PID: Express
+    expose:
+      - 1433
+    networks:
+      development-network:
+        ipv4_address: 172.43.0.105
+
   backend-server:
     image: your-backend-server-image
     container_name: backend-server
@@ -141,6 +157,29 @@ data_sources:
     autoIncrementingColumn: id
     partitioningColumn: correlation_id
 
+  - id: sqlserver_source
+    description: Events Table in SQL Server
+    type: sqlserver
+    host: 172.43.0.105
+    port: 1433
+    username: sa
+    password: my_password
+    database: master
+    table: events_table
+    columns:
+      - id
+      - event_id
+      - event_name
+      - aggregate_id
+      - aggregate_version
+      - json_payload
+      - json_metadata
+      - recorded_on
+      - causation_id
+      - correlation_id
+    autoIncrementingColumn: id
+    partitioningColumn: correlation_id
+
 # Connections to your endpoints.
 # The Emulator will send data it reads from the databases to these endpoints.
 data_destinations:
@@ -161,7 +200,16 @@ data_destinations:
     username: http-username-123
     password: http-password-123
     sources:
-      - mysql-source
+      - mysql_source
+
+  - id: projection_3
+    description: Projection 3
+    type: http-push
+    endpoint: http://172.30.0.199:8080/projections/projection-3
+    username: http-username-123
+    password: http-password-123
+    sources:
+      - sqlserver_source
 ```
 
 ### Payloads
@@ -204,7 +252,6 @@ The Emulator will move on to the next message if the endpoint replies with an ac
 
 ## Upcoming Features:
 
-- [ ] Add support for SQL Server
 - [ ] Add support for filtering
 - [ ] Add support for Oracle
 - [ ] Add support for MongoDB
