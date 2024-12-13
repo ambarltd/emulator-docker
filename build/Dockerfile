@@ -28,7 +28,7 @@ RUN apk add pkgconfig
 RUN apk add tar
 RUN apk add xz
 
-RUN curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | \
+RUN curl --proto '=https' --tlsv1.3 -sSf https://get-ghcup.haskell.org | \
     BOOTSTRAP_HASKELL_NONINTERACTIVE=1 \
     BOOTSTRAP_HASKELL_GHC_VERSION="9.10.1" \
     BOOTSTRAP_HASKELL_INSTALL_NO_STACK=1 \
