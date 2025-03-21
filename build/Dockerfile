@@ -38,7 +38,7 @@ ENV PATH="/root/.ghcup/bin:$PATH"
 ENV PATH="/root/.cabal/bin:$PATH"
 
 WORKDIR /tmp
-RUN git clone https://github.com/ambarltd/emulator.git
+RUN git clone --recurse-submodules https://github.com/ambarltd/emulator.git
 RUN mv /tmp/emulator /opt/emulator
 
 WORKDIR /opt/emulator
