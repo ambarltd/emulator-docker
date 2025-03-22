@@ -44,7 +44,7 @@ RUN mv /tmp/emulator /opt/emulator
 WORKDIR /opt/emulator
 RUN git fetch # just in case we have cached git clone
 RUN git checkout v1.9
-RUN cabal build emulator
+RUN cabal build exe:emulator
 RUN cp $(cabal list-bin emulator) /tmp/emulator
 
 ##################################################################################
