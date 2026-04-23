@@ -7,8 +7,7 @@ on:
 jobs:
   push_to_registry:
     name: Push Docker image to Docker Hub for ${{ matrix.platform }}
-    runs-on:
-      group: ${{ matrix.runner_group }}
+    runs-on: ${{ matrix.runner }}
     permissions:
       packages: write
       contents: read
@@ -20,10 +19,10 @@ jobs:
           - linux/arm64
         include:
           - platform: linux/amd64
-            runner_group: large_amd64
+            runner: ubuntu-24.04
             platform_tag: amd64
           - platform: linux/arm64
-            runner_group: large_arm64
+            runner: ubuntu-24.04-arm
             platform_tag: arm64
     steps:
       - name: Check out the repo
